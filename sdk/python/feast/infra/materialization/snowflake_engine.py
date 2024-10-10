@@ -31,6 +31,7 @@ from feast.infra.utils.snowflake.snowflake_utils import (
     get_snowflake_online_store_path,
     package_snowpark_zip,
 )
+from feast.on_demand_feature_view import OnDemandFeatureView
 from feast.protos.feast.types.EntityKey_pb2 import EntityKey as EntityKeyProto
 from feast.protos.feast.types.Value_pb2 import Value as ValueProto
 from feast.repo_config import FeastConfigBaseModel, RepoConfig
@@ -46,7 +47,10 @@ class SnowflakeMaterializationEngineConfig(FeastConfigBaseModel):
     """ Type selector"""
 
     config_path: Optional[str] = os.path.expanduser("~/.snowsql/config")
-    """ Snowflake config path -- absolute path required (Cant use ~)"""
+    """ Snowflake snowsql config path -- absolute path required (Cant use ~)"""
+
+    connection_name: Optional[str] = None
+    """ Snowflake connector connection name -- typically defined in ~/.snowflake/connections.toml """
 
     account: Optional[str] = None
     """ Snowflake deployment identifier -- drop .snowflakecomputing.com"""
@@ -117,10 +121,10 @@ class SnowflakeMaterializationEngine(BatchMaterializationEngine):
         self,
         project: str,
         views_to_delete: Sequence[
-            Union[BatchFeatureView, StreamFeatureView, FeatureView]
+            Union[BatchFeatureView, StreamFeatureView, FeatureView, OnDemandFeatureView]
         ],
         views_to_keep: Sequence[
-            Union[BatchFeatureView, StreamFeatureView, FeatureView]
+            Union[BatchFeatureView, StreamFeatureView, FeatureView, OnDemandFeatureView]
         ],
         entities_to_delete: Sequence[Entity],
         entities_to_keep: Sequence[Entity],
@@ -285,8 +289,14 @@ class SnowflakeMaterializationEngine(BatchMaterializationEngine):
 
             fv_latest_values_sql = offline_job.to_sql()
 
+            if feature_view.entity_columns:
+                first_feature_view_entity_name = getattr(
+                    feature_view.entity_columns[0], "name", None
+                )
+            else:
+                first_feature_view_entity_name = None
             if (
-                feature_view.entity_columns[0].name == DUMMY_ENTITY_ID
+                first_feature_view_entity_name == DUMMY_ENTITY_ID
             ):  # entityless Feature View's placeholder entity
                 entities_to_write = 1
             else:

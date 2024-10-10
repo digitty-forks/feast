@@ -9,30 +9,27 @@
   "types": "./dist/FeastUI.d.ts",
   "module": "./dist/feast-ui.module.js",
   "peerDependencies": {
-    "@elastic/datemath": "^5.0.3",
-    "@elastic/eui": "^55.0.1",
-    "@emotion/react": "^11.7.1",
-    "d3": "^7.3.0",
-    "inter-ui": "^3.19.3",
-    "moment": "^2.29.1",
-    "prop-types": "^15.8.1",
-    "query-string": "^7.1.1",
+    "@elastic/eui": "^95.12.0",
+    "@emotion/react": "^11.13.3",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-query": "^3.34.12",
-    "react-router-dom": "<6.4.0",
-    "react-scripts": "^5.0.0",
-    "use-query-params": "^1.2.3",
-    "zod": "^3.11.6"
+    "react-dom": "^17.0.2"
+  },
+  "peerDependenciesMeta": {
+    "@elastic/eui": {
+      "optional": true
+    },
+    "@emotion/react": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@elastic/datemath": "^5.0.3",
-    "@elastic/eui": "^55.0.1",
-    "@emotion/react": "^11.7.1",
+    "@elastic/eui": "^95.12.0",
+    "@emotion/css": "^11.13.0",
+    "@emotion/react": "^11.13.3",
     "d3": "^7.3.0",
     "inter-ui": "^3.19.3",
     "moment": "^2.29.1",
-    "prop-types": "^15.8.1",
     "protobufjs": "^7.1.1",
     "query-string": "^7.1.1",
     "react-code-blocks": "^0.0.9-0",
@@ -60,6 +57,7 @@
   },
   "jest": {
     "moduleNameMapper": {
+      "chroma-js": "<rootDir>/node_modules/chroma-js/dist/chroma.min.cjs",
       "d3": "<rootDir>/node_modules/d3/dist/d3.min.js"
     }
   },
@@ -103,7 +101,7 @@
     "rollup-plugin-svg": "^2.0.0",
     "rollup-plugin-svgo": "^1.1.0",
     "rollup-plugin-terser": "^7.0.2",
-    "typescript": "^4.4.2"
+    "typescript": "^4.9.5"
   },
   "description": "Web UI for the [Feast Feature Store](https://feast.dev/)",
   "repository": {
